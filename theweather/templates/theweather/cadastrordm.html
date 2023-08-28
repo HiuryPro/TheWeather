@@ -4,11 +4,10 @@
     <title>Cadastro de Região e dados Metereologicos</title>
 </head>
 <body>
-    <h2>Cadastro de Região e dados Metereologicos</h2>
+    <h2>Cadastrar Região e dados Metereologicos</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        {{ form2.as_p }}
         <button type="submit">Cadastrar</button>
     </form>
 </body>

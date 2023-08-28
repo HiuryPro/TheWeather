@@ -6,9 +6,6 @@ from . import views
 app_name = "theweather"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
-    path("<int:pk>/", views.DetailView.as_view(), name="detail"),
-    path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
-    # ex: /polls/5/vote/
-    path("<int:question_id>/vote/", views.vote, name="vote"),
-    path('cadastrar/', views.cadastrar_question, name='cadastrar_question'),
+    path("<str:regiao>/", views.DetailView.as_view(), name="detail"),
+    path('cadastrar/', views.cadastrar_regiao, name='cadastrar_question'),
 ]

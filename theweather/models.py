@@ -1,26 +1,22 @@
 import datetime
-from django.db import models
+from mongoengine import Document, fields, EmbeddedDocument
+from django import forms
 from django.utils import timezone
 import django.utils
 
-class Question(models.Model):
-    def __str__(self):
-        return self.question_text
-    
-    def was_published_recently(self):
-        now = timezone.now()
-        return now - datetime.timedelta(days=1) <= self.pub_date <= now
-    
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField("date published",default=django.utils.timezone.now)
-    teste = models.SmallIntegerField(null=True)
+
+class Usuario(Document):
+    nome = fields.StringField(max_length=100)
+    email = fields.EmailField()
+    password = fields.StringField(max_length=10)
 
 
-class Choice(models.Model):
+class DadosMetereologicos(EmbeddedDocument):
+    temperatura = fields.IntField()
+    umidade = fields.DecimalField()
 
-    def __str__(self):
-        return self.choice_text
-     
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
+
+class Regiao(Document):
+    regiao = fields.StringField(max_length=200)
+    dados_metereologicos = fields.ListField(
+        fields.EmbeddedDocumentField(DadosMetereologicos))
