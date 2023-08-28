@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import mongoengine
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -71,20 +73,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'weatherapp.wsgi.application'
 
+mongoengine.connect(
+    host="mongodb+srv://hiury:XiDZ4mhYjS7j38aO@weatherdb.0ywfw7t.mongodb.net/WheatherDB?retryWrites=true&w=majority",)
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-        'default': {
-            'ENGINE': 'djongo',
-            'NAME': 'WeatherDB',
-            'ENFORCE_SCHEMA': False,
-            'CLIENT': {
-                'host': 'mongodb+srv://hiury:XiDZ4mhYjS7j38aO@weatherdb.0ywfw7t.mongodb.net/WeatherDB?retryWrites=true&w=majority'
-            }  
-        }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

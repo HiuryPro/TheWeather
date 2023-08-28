@@ -1,7 +1,12 @@
+<!DOCTYPE html>
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
-        <li><a href="{% url 'theweather:detail' question.id %}">{{ question.question_text }}</a></li>
+        <h1>{{ question.regiao }}</h1>
+        {% for dadosM in question.dados_metereologicos%}
+            <li><p> Temperatura {{ dadosM.temperatura }}</p></li>
+            <li><p> Umidade {{ dadosM.umidade }}</p></li>
+        {%endfor%}
     {% endfor %}
     </ul>
 {% else %}
