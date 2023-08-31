@@ -3,6 +3,7 @@ from mongoengine import Document, fields, EmbeddedDocument
 from django import forms
 from django.utils import timezone
 import django.utils
+import time
 
 
 class Usuario(Document):
@@ -14,7 +15,7 @@ class Usuario(Document):
 class DadosMetereologicos(EmbeddedDocument):
     temperatura = fields.IntField()
     umidade = fields.DecimalField()
-
+    dt_criacao = fields.DateTimeField(default= datetime.datetime.utcnow)
 
 class Regiao(Document):
     regiao = fields.StringField(max_length=200)

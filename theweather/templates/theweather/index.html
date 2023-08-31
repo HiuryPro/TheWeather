@@ -6,6 +6,7 @@
         {% for dadosM in question.dados_metereologicos%}
             <li><p> Temperatura {{ dadosM.temperatura }}</p></li>
             <li><p> Umidade {{ dadosM.umidade }}</p></li>
+            <li><p> Data {{ dadosM.dt_criacao }}</p></li>
         {%endfor%}
     {% endfor %}
     </ul>
