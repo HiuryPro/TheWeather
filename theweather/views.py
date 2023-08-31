@@ -19,9 +19,9 @@ class IndexView(generic.ListView):
 
 
 def cadastrar_regiao(request):
+    form = RegiaoForm(request.POST)
+    formset = DadosMetereologicosForm(request.POST)
     if request.method == 'POST':
-        form = RegiaoForm(request.POST)
-        formset = DadosMetereologicosForm(request.POST)
         if all([form.is_valid(), formset.is_valid()]):
             print('corno')
             teste2 = form.cleaned_data
