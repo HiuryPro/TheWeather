@@ -1,0 +1,6 @@
+django
+mongoengine
+django-bootstrap-v5
+ipykernel
+python-dotenv
+requests

@@ -14,6 +14,7 @@ class Usuario(Document):
 class DadosMetereologicos(EmbeddedDocument):
     temperatura = fields.IntField()
     umidade = fields.DecimalField()
+    dt_criacao = fields.DateTimeField(default=timezone.now)
 
 
 class Regiao(Document):

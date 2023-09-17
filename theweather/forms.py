@@ -12,7 +12,7 @@ class QuestionForm(forms.Form):
 
 class DadosMetereologicosForm(forms.Form):
     temperatura = forms.IntegerField()
-    umidade = forms.DecimalField(decimal_places=2)
+    umidade = forms.DecimalField()
 
 
 class RegiaoForm(forms.Form):
