@@ -1,12 +1,18 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+import os
+from django.shortcuts import render
 from django.views import generic
-from .models import DadosMetereologicos, Regiao
-from django.utils import timezone
 from .forms import DadosMetereologicosForm, RegiaoForm
+from pymongo import MongoClient
+from bson import Decimal128
+import datetime
+import decimal
 
 # Create your views here.
+
+MONGODB_URI = os.environ['MONGODB_URI']
+client = MongoClient(MONGODB_URI)
+db = client.WheatherDB
+regiao = db.regiao
 
 
 class IndexView(generic.ListView):
@@ -14,30 +20,39 @@ class IndexView(generic.ListView):
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
+
+        results = list(regiao.find())
+
         """Return the last five published questions."""
-        return Regiao.objects
+        return results
 
 
 def cadastrar_regiao(request):
-    form = RegiaoForm(request.POST)
-    formset = DadosMetereologicosForm(request.POST)
+    form_Regiao = RegiaoForm(request.POST)
+    form_Metereologia = DadosMetereologicosForm(request.POST)
+    
     if request.method == 'POST':
-        if all([form.is_valid(), formset.is_valid()]):
-            print('corno')
-            teste2 = form.cleaned_data
-            teste1 = formset.cleaned_data
-            q = Regiao(**teste2,
-                       dados_metereologicos=[DadosMetereologicos(**teste1)])
-            q.save()
+        if all([form_Regiao.is_valid(), form_Metereologia.is_valid()]):
 
-            print(teste2, teste1)
+            input_Regiao = form_Regiao.cleaned_data
+            input_Metereologico = form_Metereologia.cleaned_data
+
+            input_Metereologico = {k: (Decimal128(str(v)) if type(
+                v) == decimal.Decimal else v) for k, v in input_Metereologico.items()}
+
+            insert_RegiaoMetereologica = {**input_Regiao, "dados_metereologicos": [
+                {**input_Metereologico, "dt_criacao": datetime.datetime.now()}]}
+
+            print(insert_RegiaoMetereologica)
+
+            regiao.insert_one(insert_RegiaoMetereologica)
+
+            # q = Regiao(**teste2,
+            #            dados_metereologicos=[DadosMetereologicos(**teste1)])
+            # # q.save()
+
     else:
-        form = RegiaoForm()
-        formset = DadosMetereologicosForm()
+        form_Regiao = RegiaoForm()
+        form_Metereologia = DadosMetereologicosForm()
 
-    return render(request, 'theweather/cadastro.html', {'form': form, "form2": formset})
-
-
-class DetailView(generic.DetailView):
-    model = Regiao
-    template_name = "polls/detail.html"
+    return render(request, 'theweather/cadastro.html', {'form': form_Regiao, "form2": form_Metereologia})
