@@ -6,22 +6,34 @@ from pymongo import MongoClient
 from bson import Decimal128
 import datetime
 import decimal
+from bson.objectid import ObjectId
+from dotenv import load_dotenv
 
 # Create your views here.
 
 MONGODB_URI = os.environ['MONGODB_URI']
-client = MongoClient(MONGODB_URI)
+OPTIONS = os.environ['OPTIONS']
+
+client = MongoClient(
+    MONGODB_URI+OPTIONS)
 db = client.WheatherDB
 regiao = db.regiao
+dados_metereologicos = db.dados_metereologicos
 
 
 class IndexView(generic.ListView):
     template_name = "theweather/index.html"
-    context_object_name = "latest_question_list"
+    context_object_name = "latest_regiao_list"
 
     def get_queryset(self):
+        lookup = {"$lookup": {"from": "dados_metereologicos",
+                              "localField": "_id",
+                              "foreignField": "id_regiao",
+                              "as": "dadosM"}}
 
-        results = list(regiao.find())
+        pipeline = [lookup]
+
+        results = list(regiao.aggregate(pipeline))
 
         """Return the last five published questions."""
         return results
@@ -30,22 +42,19 @@ class IndexView(generic.ListView):
 def cadastrar_regiao(request):
     form_Regiao = RegiaoForm(request.POST)
     form_Metereologia = DadosMetereologicosForm(request.POST)
-    
+
     if request.method == 'POST':
         if all([form_Regiao.is_valid(), form_Metereologia.is_valid()]):
-
+            _id = ObjectId()
             input_Regiao = form_Regiao.cleaned_data
             input_Metereologico = form_Metereologia.cleaned_data
 
             input_Metereologico = {k: (Decimal128(str(v)) if type(
                 v) == decimal.Decimal else v) for k, v in input_Metereologico.items()}
 
-            insert_RegiaoMetereologica = {**input_Regiao, "dados_metereologicos": [
-                {**input_Metereologico, "dt_criacao": datetime.datetime.now()}]}
-
-            print(insert_RegiaoMetereologica)
-
-            regiao.insert_one(insert_RegiaoMetereologica)
+            regiao.insert_one({"_id": _id, **input_Regiao})
+            dados_metereologicos.insert_one(
+                {"id_regiao": _id, **input_Metereologico, "dt_criacao": datetime.datetime.now()})
 
             # q = Regiao(**teste2,
             #            dados_metereologicos=[DadosMetereologicos(**teste1)])
