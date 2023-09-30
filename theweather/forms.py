@@ -17,3 +17,4 @@ class DadosMetereologicosForm(forms.Form):
 
 class RegiaoForm(forms.Form):
     regiao = forms.CharField(max_length=100)
+    cidade = forms.CharField(max_length=100)
