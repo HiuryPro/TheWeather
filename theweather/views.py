@@ -19,24 +19,45 @@ client = MongoClient(
 db = client.WheatherDB
 regiao = db.regiao
 dados_metereologicos = db.dados_metereologicos
+#  {
+#           label: "My First Dataset",
+#           data: teste,
+#           parsing: {
+#             xAxisKey: 'dt_criacao',
+#             yAxisKey: 'umidade'
+#           }
+#  }
 
 
-class IndexView(generic.ListView):
+def IndexView(request):
     template_name = "theweather/index.html"
     context_object_name = "latest_regiao_list"
 
-    def get_queryset(self):
-        lookup = {"$lookup": {"from": "dados_metereologicos",
-                              "localField": "_id",
-                              "foreignField": "id_regiao",
-                              "as": "dadosM"}}
+    lookup = {"$lookup": {"from": "dados_metereologicos",
+                          "localField": "_id",
+                          "foreignField": "id_regiao",
+                          "as": "dadosM"}}
+    project = {"$project": {'_id': 0, 'cidade': 0, 'dadosM._id': 0,
+                            'dadosM.id_regiao': 0, 'dadosM.regiao': 0}}
 
-        pipeline = [lookup]
+    pipeline = [lookup, project]
 
-        results = list(regiao.aggregate(pipeline))
+    results = list(regiao.aggregate(pipeline))
+    print(results)
 
-        """Return the last five published questions."""
-        return results
+    resultsFilter = []
+
+    for dados in results:
+        for maps in dados['dadosM']:
+            for key, value in maps.items():
+                if (type(value) == Decimal128):
+                    maps[key] = float(str(maps[key]))
+                elif (type(value) == datetime.datetime):
+                    maps[key] = maps[key].strftime('%d/%m/%y %H:%M:%S')
+        resultsFilter.append(dados)
+
+    """Return the last five published questions."""
+    return render(request, template_name, {context_object_name: resultsFilter})
 
 
 def cadastrar_regiao(request):

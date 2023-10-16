@@ -1,53 +1,134 @@
-{% extends "./base.html" %}
+{% extends "./base.html" %} 
 
 
-{% block title %}
-Site Pika
-{% endblock  %}
+{% block title %} The wheather {% endblock %}
 
-
-
-{%block content%} 
-
+{% block content %} 
 {% if latest_regiao_list %}
-    <ul>
-    {% for regiao in latest_regiao_list %}
-        <h1>{{ regiao.regiao }}</h1>
-        {% for dadosM in regiao.dadosM%}
-            <li><p> Temperatura {{ dadosM.temperatura }}</p></li>
-            <li><p> Umidade {{ dadosM.umidade }}</p></li>
-            <li><p> Data {{ dadosM.dt_criacao }}</p></li>
-        {%endfor%}
+<ul>
+  {% for regiao in latest_regiao_list %}
+    <h1>{{ regiao.regiao }}</h1>
+    {% for dadosM in regiao.dadosM %}
+      <li><p>Temperatura {{ dadosM.temperatura }}</p></li>
+      <li><p>Umidade {{ dadosM.umidade }}</p></li>
+      <li><p>Data {{ dadosM.dt_criacao }}</p></li>
     {% endfor %}
-    </ul>
+  {% endfor %}
+</ul>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
 
-
-
 <div class="row">
-    <div class="col-lg-4">
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item w-100" style="background: #21313C;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" height="480" src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=64fd2241-692c-4e00-8add-b37f5f1e0626&maxDataAge=300&theme=dark&autoRefresh=true"></iframe>
-        </div>
+  <div class="col-lg-4">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe
+        class="embed-responsive-item w-100"
+        style="
+          background: #21313c;
+          border: none;
+          border-radius: 2px;
+          box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
+        "
+        height="480"
+        src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=64fd2241-692c-4e00-8add-b37f5f1e0626&maxDataAge=300&theme=dark&autoRefresh=true"
+      ></iframe>
     </div>
-
-    <div class="col-lg-4">
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item w-100" style="background: #21313C;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" height="480" src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510d26b-72da-4ced-848e-8a2dc1713838&maxDataAge=300&theme=dark&autoRefresh=true"></iframe>
-        </div>
+  </div>
+<div>
+  {{latest_regiao_list}}
+</div>
+  <div class="col-lg-4">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe
+        class="embed-responsive-item w-100"
+        style="
+          background: #21313c;
+          border: none;
+          border-radius: 2px;
+          box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
+        "
+        height="480"
+        src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510d26b-72da-4ced-848e-8a2dc1713838&maxDataAge=300&theme=dark&autoRefresh=true"
+      ></iframe>
     </div>
+  </div>
 
-    <div class="col-lg-4">
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item w-100" style="background: #21313C;border: none;border-radius: 2px;box-shadow: 0 2px 10px 0 rgba(70, 76, 79, .2);" height="480" src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510de55-72da-4193-83bc-8a2dc1794fe4&maxDataAge=300&theme=dark&autoRefresh=true"></iframe>
-        </div>
+  <div class="col-lg-4">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe
+        class="embed-responsive-item w-100"
+        style="
+          background: #21313c;
+          border: none;
+          border-radius: 2px;
+          box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
+        "
+        height="480"
+        src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510de55-72da-4193-83bc-8a2dc1794fe4&maxDataAge=300&theme=dark&autoRefresh=true"
+      ></iframe>
     </div>
-</div>   
+  </div>
+</div>
 
+<div class="chart-container" style="aspect-ratio: 2">
+    <canvas id="myChart"></canvas>        
+</div>
 
+<div class="chart-container" style="aspect-ratio: 2">
+  <canvas id="myChartT"></canvas>        
+</div>
 
+{% endblock content %}
 
-{% endblock%}
+{% block script %}
+<script>
+  var teste = {{latest_regiao_list|safe}}
+  var datasetsUmidade = []
+  var datasetsTemperatura = []
+  
+  for(var x in teste){
+    var dictU = {}
+    var dictT = {}
 
+    dictT.label = teste[x]['regiao']
+    dictU.label = teste[x]['regiao']
+    var dadosM = teste[x]['dadosM'];
+
+    dictU.data = dadosM
+    dictT.data = dadosM
+
+    dictU.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'umidade'
+    }
+
+    dictT.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'temperatura'
+    }
+
+    datasetsUmidade.push(dictU)
+    datasetsTemperatura.push(dictT)
+  }
+
+  console.log(datasetsUmidade)
+  const ctx = document.getElementById("myChart");
+  const ctx2 = document.getElementById("myChartT");
+
+  new Chart(ctx, {
+    type: "line",
+    data: {
+      datasets: datasetsUmidade,
+    }
+  });
+
+  new Chart(ctx2, {
+    type: "line",
+    data: {
+      datasets: datasetsTemperatura,
+    }
+  });
+
+</script>
+{% endblock %}
