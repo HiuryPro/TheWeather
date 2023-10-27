@@ -37,10 +37,21 @@ def IndexView(request):
                           "localField": "_id",
                           "foreignField": "id_regiao",
                           "as": "dadosM"}}
-    project = {"$project": {'_id': 0, 'cidade': 0, 'dadosM._id': 0,
+
+    unwind = {"$unwind": "$dadosM"}
+
+    sort = {"$sort": {"dadosM.dt_criacao": 1}}
+
+    group = {"$group": {"_id": "$_id",
+                        "regiao": {"$first": "$regiao"},
+                        "dadosM": {"$push": "$dadosM"}}}
+
+    project = {"$project": {'_id': 0, 'dadosM._id': 0,
                             'dadosM.id_regiao': 0, 'dadosM.regiao': 0}}
 
-    pipeline = [lookup, project]
+    limit = {'$limit': 100}
+
+    pipeline = [lookup, unwind, limit, sort, group, project]
 
     results = list(regiao.aggregate(pipeline))
     print(results)

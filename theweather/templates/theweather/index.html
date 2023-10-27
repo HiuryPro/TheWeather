@@ -79,6 +79,10 @@
   <canvas id="myChartT"></canvas>        
 </div>
 
+
+<div id="apex"></canvas>        
+
+
 {% endblock content %}
 
 {% block script %}
@@ -86,14 +90,25 @@
   var teste = {{latest_regiao_list|safe}}
   var datasetsUmidade = []
   var datasetsTemperatura = []
+  var dataapex = []
   
   for(var x in teste){
     var dictU = {}
     var dictT = {}
 
+    var dictxy = {}
+
     dictT.label = teste[x]['regiao']
     dictU.label = teste[x]['regiao']
+
+    dictxy.name = teste[x]['regiao']
+    dictxy.data = []
+
     var dadosM = teste[x]['dadosM'];
+
+    for(var y in dadosM){
+      dictxy.data.push({x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade']})
+    }
 
     dictU.data = dadosM
     dictT.data = dadosM
@@ -110,9 +125,14 @@
 
     datasetsUmidade.push(dictU)
     datasetsTemperatura.push(dictT)
+    if(dataapex.length < 1){
+      dataapex.push(dictxy)
+    }
+    
   }
 
   console.log(datasetsUmidade)
+  console.log(dataapex)
   const ctx = document.getElementById("myChart");
   const ctx2 = document.getElementById("myChartT");
 
@@ -129,6 +149,25 @@
       datasets: datasetsTemperatura,
     }
   });
+
+  var options = {
+    chart: {
+      type: 'line',
+      stacked: true
+    },
+    series: dataapex,
+    stroke: {
+      width: [4, 4]
+    },
+  xaxis: {
+    type: 'category'
+  }
+  }
+  
+  var chart = new ApexCharts(document.querySelector("#apex"), options);
+  
+  chart.render();
+
 
 </script>
 {% endblock %}
