@@ -1,132 +1,109 @@
-{% extends "./base.html" %} 
-{% block title %} Graficos {% endblock %} 
-{%block content%} 
-  {% if latest_regiao_list %}
-    <ul>
-      {% for regiao in latest_regiao_list %}
-        <h1>{{ regiao.regiao }}</h1>
-        {% for dadosM in regiao.dadosM%}
-          <li><p>Temperatura {{ dadosM.temperatura }}</p></li>
-          <li><p>Umidade {{ dadosM.umidade }}</p></li>
-          <li><p>Data {{ dadosM.dt_criacao }}</p></li>
-        {%endfor%} 
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No polls are available.</p>
-  {% endif %}
+{% extends "./base.html" %}
 
-  <div class="row">
-    <div class="col-lg-4">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe
-          class="embed-responsive-item w-100"
-          style="
-            background: #21313c;
-            border: none;
-            border-radius: 2px;
-            box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
-          "
-          height="480"
-          src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=64fd2241-692c-4e00-8add-b37f5f1e0626&maxDataAge=300&theme=dark&autoRefresh=true"
-        ></iframe>
-      </div>
-    </div>
 
-    <div class="col-lg-4">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe
-          class="embed-responsive-item w-100"
-          style="
-            background: #21313c;
-            border: none;
-            border-radius: 2px;
-            box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
-          "
-          height="480"
-          src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510d26b-72da-4ced-848e-8a2dc1713838&maxDataAge=300&theme=dark&autoRefresh=true"
-        ></iframe>
-      </div>
-    </div>
+{% block title %} The wheather {% endblock %}
 
-    <div class="col-lg-4">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe
-          class="embed-responsive-item w-100"
-          style="
-            background: #21313c;
-            border: none;
-            border-radius: 2px;
-            box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
-          "
-          height="480"
-          src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510de55-72da-4193-83bc-8a2dc1794fe4&maxDataAge=300&theme=dark&autoRefresh=true"
-        ></iframe>
-      </div>
-    </div>
-  </div>
+{% block content %}
 
-  <div id="chart"></div>
+
+<div class="container">
+    <div id="apex"></div>
+</div>
 
 {% endblock %}
 
 {% block script %}
-  <script>
-    var options = {
-      chart: {
-        height: 280,
-        type: "radialBar",
-      },
+<script>
+  var teste = {{ latest_regiao_list| safe}} //ignorar erro
+  var datasetsUmidade = []
+  var datasetsTemperatura = []
+  var dataapex = []
 
-      series: [60], //colocar multiplos de 5. Ex.: 5, 10, 15, 20, 25.
-      colors: ["#20E647"],
-      plotOptions: {
-        radialBar: {
-          hollow: {
-            margin: 0,
-            size: "70%",
-            background: "#293450",
-          },
-          track: {
-            dropShadow: {
-              enabled: true,
-              top: 2,
-              left: 0,
-              blur: 4,
-              opacity: 0.15,
-            },
-          },
-          dataLabels: {
-            name: {
-              offsetY: -10,
-              color: "#fff",
-              fontSize: "13px",
-            },
-            value: {
-              color: "#fff",
-              fontSize: "30px",
-              show: true,
-            },
+  for (var x in teste) {
+    var dictU = {}
+    var dictT = {}
+
+    var dictxy = {}
+
+    dictT.label = teste[x]['regiao']
+    dictU.label = teste[x]['regiao']
+
+    dictxy.name = teste[x]['regiao']
+    dictxy.data = []
+
+    var dadosM = teste[x]['dadosM'];
+
+    var dadosTeste = []
+
+    for (var y in dadosM) {
+      dictxy.data.push({ x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade'] })
+      dadosTeste.push(dadosM[y]['umidade'])
+    }
+
+    dictU.data = dadosM
+    dictT.data = dadosM
+
+    dictU.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'umidade'
+    }
+
+    dictT.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'temperatura'
+    }
+
+    datasetsUmidade.push(dictU)
+    datasetsTemperatura.push(dictT)
+    dataapex.push(dictxy)
+
+  }
+
+  var options = {
+        series: dataapex,
+        chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
           },
         },
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          shade: "dark",
-          type: "vertical",
-          gradientToColors: ["#87D4F9"],
-          stops: [0, 100],
+        dataLabels: {
+          enabled: false
         },
-      },
-      stroke: {
-        lineCap: "round",
-      },
-      labels: ["Progress"],
-    };
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        xaxis: {
+          categories: [dadosM[x]['dt_criacao']],
+        },
+        yaxis: {
+          title: {
+            text: 'Umidade'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return "Precipitação: " + val + "%"
+            }
+          }
+        }
+        };
 
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
+  var chart = new ApexCharts(document.querySelector("#apex"), options);
+  chart.render();
 
-    chart.render();
-  </script>
+  console.log(dataapex)
+</script>
+
 {% endblock %}
