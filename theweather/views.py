@@ -18,69 +18,45 @@ client = MongoClient(MONGODB_URI + OPTIONS)
 db = client.WheatherDB
 regiao = db.regiao
 dados_metereologicos = db.dados_metereologicos
-#  {
-#           label: "My First Dataset",
-#           data: teste,
-#           parsing: {
-#             xAxisKey: 'dt_criacao',
-#             yAxisKey: 'umidade'
-#           }
-#  }
-
 
 def IndexView(request):
     template_name = "theweather/index.html"
     context_object_name = "latest_regiao_list"
 
-    lookup = {
-        "$lookup": {
-            "from": "dados_metereologicos",
-            "localField": "_id",
-            "foreignField": "id_regiao",
-            "as": "dadosM",
-        }
-    }
-
-    unwind = {"$unwind": "$dadosM"}
-
-    sort = {"$sort": {"dadosM.dt_criacao": 1}}
-
-    group = {
-        "$group": {
-            "_id": "$_id",
-            "regiao": {"$first": "$regiao"},
-            "dadosM": {"$push": "$dadosM"},
-        }
-    }
-
-    project = {
-        "$project": {
-            "_id": 0,
-            "dadosM._id": 0,
-            "dadosM.id_regiao": 0,
-            "dadosM.regiao": 0,
-        }
-    }
-
-    #limit = {"$limit": 100}
-
-    pipeline = [lookup, unwind, sort, group, project]
+    # Pipeline de agregação para buscar regiões e dados meteorológicos
+    pipeline = [
+        {
+            "$lookup": {
+                "from": "dados_metereologicos",
+                "localField": "_id",
+                "pipeline": [{"$sort": {"dt_criacao": 1}}, {"$limit": 10}],
+                "foreignField": "id_regiao",
+                "as": "dadosM",
+            }
+        },
+        {
+            "$project": {
+                "_id": 0,
+                "dadosM._id": 0,
+                "dadosM.id_regiao": 0,
+                "dadosM.regiao": 0,
+            },
+        },
+    ]
 
     results = list(regiao.aggregate(pipeline))
-    print(results)
 
+    # Converter tipos de dados, se necessário
     resultsFilter = []
-
     for dados in results:
         for maps in dados["dadosM"]:
             for key, value in maps.items():
-                if type(value) == Decimal128:
+                if isinstance(value, Decimal128):
                     maps[key] = float(str(maps[key]))
-                elif type(value) == datetime.datetime:
+                elif isinstance(value, datetime.datetime):
                     maps[key] = maps[key].strftime("%d/%m/%y %H:%M:%S")
         resultsFilter.append(dados)
 
-    """Return the last five published questions."""
     return render(request, template_name, {context_object_name: resultsFilter})
 
 
@@ -107,10 +83,6 @@ def cadastrar_regiao(request):
                     "dt_criacao": datetime.datetime.now(),
                 }
             )
-
-            # q = Regiao(**teste2,
-            #            dados_metereologicos=[DadosMetereologicos(**teste1)])
-            # # q.save()
 
     else:
         form_Regiao = RegiaoForm()
