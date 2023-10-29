@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 MONGODB_URI = os.environ['MONGODB_URI']
 OPTIONS = os.environ['OPTIONS']
 
+print(MONGODB_URI+OPTIONS)
 client = MongoClient(
     MONGODB_URI+OPTIONS)
 db = client.WheatherDB
@@ -35,23 +36,14 @@ def IndexView(request):
 
     lookup = {"$lookup": {"from": "dados_metereologicos",
                           "localField": "_id",
+                          "pipeline": [{"$sort": {"dt_criacao": 1}}],
                           "foreignField": "id_regiao",
                           "as": "dadosM"}}
-
-    unwind = {"$unwind": "$dadosM"}
-
-    sort = {"$sort": {"dadosM.dt_criacao": 1}}
-
-    group = {"$group": {"_id": "$_id",
-                        "regiao": {"$first": "$regiao"},
-                        "dadosM": {"$push": "$dadosM"}}}
 
     project = {"$project": {'_id': 0, 'dadosM._id': 0,
                             'dadosM.id_regiao': 0, 'dadosM.regiao': 0}}
 
-    limit = {'$limit': 100}
-
-    pipeline = [lookup, unwind, limit, sort, group, project]
+    pipeline = [lookup, project]
 
     results = list(regiao.aggregate(pipeline))
     print(results)
@@ -64,7 +56,7 @@ def IndexView(request):
                 if (type(value) == Decimal128):
                     maps[key] = float(str(maps[key]))
                 elif (type(value) == datetime.datetime):
-                    maps[key] = maps[key].strftime('%d/%m/%y %H:%M:%S')
+                    maps[key] = maps[key].strftime('%Y-%m-%dT%H:%M:%S')
         resultsFilter.append(dados)
 
     """Return the last five published questions."""

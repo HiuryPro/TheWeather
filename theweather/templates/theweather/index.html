@@ -97,6 +97,7 @@
     var dictT = {}
 
     var dictxy = {}
+    var dictNovo = {}
 
     dictT.label = teste[x]['regiao']
     dictU.label = teste[x]['regiao']
@@ -123,11 +124,11 @@
       yAxisKey: 'temperatura'
     }
 
-    datasetsUmidade.push(dictU)
+    datasetsUmidade.push(dictxy)
     datasetsTemperatura.push(dictT)
-    if(dataapex.length < 1){
-      dataapex.push(dictxy)
-    }
+   
+    dataapex.push(dictxy)
+
     
   }
 
@@ -140,33 +141,92 @@
     type: "line",
     data: {
       datasets: datasetsUmidade,
-    }
+    },
+    options: {
+      scales: {
+          x: {
+              type: 'time',
+          }
+      }
+  }
   });
 
   new Chart(ctx2, {
     type: "line",
     data: {
       datasets: datasetsTemperatura,
-    }
+    },
+    options: {
+      scales: {
+          x: {
+              type: 'time',
+              time: {
+                  unit: 'day',
+                  displayFormats: {
+                      day: 'yy-MM-dd HH:mm:ss', // Format for date and time
+                  },
+              },
+              title: {
+                  display: true,
+                  text: 'Time'
+              }
+          }
+      }
+  }
   });
 
   var options = {
-    chart: {
-      type: 'line',
-      stacked: true
-    },
     series: dataapex,
-    stroke: {
-      width: [4, 4]
+    chart: {
+      type: 'bar',
+      height: 350
     },
-  xaxis: {
-    type: 'category'
-  }
-  }
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        endingShape: 'rounded'
+      },
+    },
+    dataLabels: {
+      enabled: false,
+      style: {
+        colors: ['#2f27ce', '#414c4e']
+      }
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: ['transparent']
+    },
+    xaxis: {
+      type: 'datetime',
+    },
+    yaxis: {
+      title: {
+        text: 'Umidade'
+      }
+    },
+    fill: {
+      opacity: 1,
+      colors: ['#2f27ce', '#414c4e']
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return "Precipitação: " + val + "%"
+        }
+      }
+    }
+    };
+
+
   
   var chart = new ApexCharts(document.querySelector("#apex"), options);
   
   chart.render();
+
+  console.log(dataapex)
 
 
 </script>
