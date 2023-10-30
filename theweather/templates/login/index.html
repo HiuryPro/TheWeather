@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="main-login">
+        <div class="left-login">
+            <h1>Faça Login <br> E administre seu painel</h1>
+            <img src="IMG/Weather.svg" class="left-login-img" alt="Weather Animação">
+        </div>
+        <div class="rigth-login">
+            <div class="card-login">
+                <h1>LOGIN</h1>
+                <div class="textfild">
+                    <label for="Usuário">Usuário</label>
+                    <input type="text" name="Usuário" placeholder="Usuário">
+                </div>
+                <div class="textfild">
+                    <label for="Senha">Senha</label>
+                    <input type="password" name="Senha" placeholder="Senha">
+                </div>
+                <button class="btn-login" onclick="mostrarMensagem()">LOGIN</button>
+                <script>
+                    function mostrarMensagem() {
+                        alert("Você clicou no botão de LOGIN!");
+                    }
+                </script>
+                <button class="btn-login" onclick="window.location.href = 'cadastro.html'">CADASTRAR </a></button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
