@@ -29,7 +29,7 @@ def IndexView(request):
             "$lookup": {
                 "from": "dados_metereologicos",
                 "localField": "_id",
-                "pipeline": [{"$sort": {"dt_criacao": 1}}, {"$limit": 10}],
+                "pipeline": [{"$sort": {"dt_criacao": 1}}, {"$limit": 30}],
                 "foreignField": "id_regiao",
                 "as": "dadosM",
             }

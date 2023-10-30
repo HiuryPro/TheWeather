@@ -2,147 +2,102 @@
 {% block title %} The wheather {% endblock %} 
 {% block content %}
 
-  <div class="container">
-    <div id="apex"></div>
-  </div>
-  <div style="width: 80%;">
-    <canvas id="mixedChart"></canvas>
+<div class="container">
+  <div id="apex"></div>
+</div>
+<div style="width: 80%">
+  <canvas id="mixedChart"></canvas>
 </div>
 
-{% endblock %}
+{% endblock %} 
 
 {% block script %}
 
-  <script>
-    var teste = {{ latest_regiao_list| safe}} //ignorar erro
-    var datasetsUmidade = []
-    var datasetsTemperatura = []
-    var dataApex = []
+<script>
+  var teste = {{ latest_regiao_list|safe }} //ignorar erro
+  var datasetsUmidade = []
+  var datasetsTemperatura = []
+  var dataApex = []
+  var chartLineBar = []
 
-    for (var x in teste) {
-      var dictU = {}
-      var dictT = {}
-
-      var dictxy = {}
-
-      dictT.label = teste[x]['regiao']
-      dictU.label = teste[x]['regiao']
-
-      dictxy.name = teste[x]['regiao']
-      dictxy.data = []
-
-      var dadosM = teste[x]['dadosM'];
-
-      var dadosTeste = []
-
-      for (var y in dadosM) {
-        dictxy.data.push({ x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade'] })
-        dadosTeste.push(dadosM[y]['umidade'])
-      }
-
-      dictU.data = dadosM
-      dictT.data = dadosM
-
-      dictU.parsing = {
-        xAxisKey: 'dt_criacao',
-        yAxisKey: 'umidade'
-      }
-
-      dictT.parsing = {
-        xAxisKey: 'dt_criacao',
-        yAxisKey: 'temperatura'
-      }
-
-      datasetsUmidade.push(dictU)
-      datasetsTemperatura.push(dictT)
-      dataApex.push(dictxy)
-
+  for (var x in teste) {
+    var dictU = {}
+    var dictT = {}
+    var dictxy = {}
+    var dictBar = {
+      label: 'Umidade',
+      type: 'bar',
+      borderColor: '#2f27ce',
+      borderWidth: 5
+    }
+    var dictLine = {
+      label: 'Temperatura',
+      type: 'line',
+      fill: false,
+      backgroundColor: '#cf4307',
+      borderColor: '#cf4307',
+      borderWidth: 5
     }
 
-    var options = {
-      series: dataApex,
-      chart: {
-        type: 'bar',
-        height: 350
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '55%',
-          endingShape: 'rounded'
-        },
-      },
-      dataLabels: {
-        enabled: false,
-        style: {
-          colors: ['#2f27ce', '#414c4e']
-        }
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent']
-      },
-      xaxis: {
-        type: 'category',
-      },
-      yaxis: {
-        title: {
-          text: 'Umidade'
-        }
-      },
-      fill: {
-        opacity: 1,
-        colors: ['#2f27ce', '#414c4e']
-      },
-      tooltip: {
-        y: {
-          formatter: function (val) {
-            return "Precipitação: " + val + "%"
-          }
-        }
-      }
-      };
+    dictT.label = teste[x]['regiao']
+    dictU.label = teste[x]['regiao']
+    dictxy.name = teste[x]['regiao']
+    dictxy.data = []
+    dictBar.data = []
+    dictLine.data = []
 
-    var chart = new ApexCharts(document.querySelector("#apex"), options);
-    chart.render();
-  </script>
+    var dadosM = teste[x]['dadosM'];
+    var dadosTeste = []
 
-  <script>
-    var ctx = document.getElementById('mixedChart').getContext('2d');
-    
-    var data = {
-        labels: ['Unipam', 'Caiçaras'],
-        datasets: [{
-            label: 'Umidade',
-            type: 'bar',
-            data: 'categories',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }, {
-            label: 'Temperatura',
-            type: 'line',
-            data: [6, 9, 2, 8, 5],
-            fill: false,
-            borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 2
-        }]
-    };
-    
-    var options = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    };
-    
-    var mixedChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options
-    });
+    for (var y in dadosM) {
+      dictxy.data.push({ x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade'] })
+
+      dadosTeste.push(dadosM[y]['umidade'])
+
+      dictBar.data.push(dadosM[y]['umidade'])
+
+      dictLine.data.push(dadosM[y]['temperatura'])
+    }
+
+    dictU.data = dadosM
+    dictT.data = dadosM
+
+    dictU.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'umidade'
+    }
+
+    dictT.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'temperatura'
+    }
+
+    datasetsUmidade.push(dictU)
+    datasetsTemperatura.push(dictT)
+    dataApex.push(dictxy)
+    chartLineBar.push(dictBar)
+    chartLineBar.push(dictLine)
+  }
+  var ctx = document.getElementById("mixedChart").getContext("2d");
+
+  var data = {
+    labels: ["Unipam", "Caiçaras"], 
+    datasets: chartLineBar
+  };
+
+  var options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
+  var mixedChart = new Chart(ctx, {
+    type: "bar",
+    data: data,
+    options: options,
+  });
 </script>
 
 {% endblock %}
