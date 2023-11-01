@@ -1,115 +1,73 @@
-{% extends "./base.html" %} 
+{% extends "./base.html" %}
+{% load static %}
 
+{% block title %} The wheather {% endblock %} 
 
-{% block title %} The wheather {% endblock %}
+{%block content %}
 
-{% block content %} 
-{% if latest_regiao_list %}
-<ul>
-  {% for regiao in latest_regiao_list %}
-    <h1>{{ regiao.regiao }}</h1>
-    {% for dadosM in regiao.dadosM %}
-      <li><p>Temperatura {{ dadosM.temperatura }}</p></li>
-      <li><p>Umidade {{ dadosM.umidade }}</p></li>
-      <li><p>Data {{ dadosM.dt_criacao }}</p></li>
-    {% endfor %}
-  {% endfor %}
-</ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
-
-<div class="row">
-  <div class="col-lg-4">
-    <div class="embed-responsive embed-responsive-16by9">
-      <iframe
-        class="embed-responsive-item w-100"
-        style="
-          background: #21313c;
-          border: none;
-          border-radius: 2px;
-          box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
-        "
-        height="480"
-        src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=64fd2241-692c-4e00-8add-b37f5f1e0626&maxDataAge=300&theme=dark&autoRefresh=true"
-      ></iframe>
+<section id="section" class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart"></canvas>
+      </div>
     </div>
-  </div>
-<div>
-  {{latest_regiao_list}}
-</div>
-  <div class="col-lg-4">
-    <div class="embed-responsive embed-responsive-16by9">
-      <iframe
-        class="embed-responsive-item w-100"
-        style="
-          background: #21313c;
-          border: none;
-          border-radius: 2px;
-          box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
-        "
-        height="480"
-        src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510d26b-72da-4ced-848e-8a2dc1713838&maxDataAge=300&theme=dark&autoRefresh=true"
-      ></iframe>
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart2"></canvas>
     </div>
   </div>
 
-  <div class="col-lg-4">
-    <div class="embed-responsive embed-responsive-16by9">
-      <iframe
-        class="embed-responsive-item w-100"
-        style="
-          background: #21313c;
-          border: none;
-          border-radius: 2px;
-          box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
-        "
-        height="480"
-        src="https://charts.mongodb.com/charts-theweather-qayct/embed/charts?id=6510de55-72da-4193-83bc-8a2dc1794fe4&maxDataAge=300&theme=dark&autoRefresh=true"
-      ></iframe>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart3"></canvas>
+      </div>
     </div>
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart4"></canvas>
+      </div>
   </div>
-</div>
+</section>
 
 <div class="chart-container" style="aspect-ratio: 2">
-    <canvas id="myChart"></canvas>        
+  <canvas id="myChart5"></canvas>
 </div>
 
-<div class="chart-container" style="aspect-ratio: 2">
-  <canvas id="myChartT"></canvas>        
-</div>
-
-
-<div id="apex"></canvas>        
-
-
-{% endblock content %}
+{% endblock content %} 
 
 {% block script %}
+<script src="{% static 'script.js' %}"></script>
 <script>
-  var teste = {{latest_regiao_list|safe}}
+  var dadosMregiao = {{latest_regiao_list|safe}}
   var datasetsUmidade = []
   var datasetsTemperatura = []
-  var dataapex = []
-  
-  for(var x in teste){
+  var temperaturaUmidae = []
+
+  var dadosMregiao2 = {}
+
+  for(var x in dadosMregiao){
     var dictU = {}
     var dictT = {}
+    var dictUT = {}
 
-    var dictxy = {}
-    var dictNovo = {}
+    dictT.label = dadosMregiao[x]['regiao']
+    dictU.label = dadosMregiao[x]['regiao']
+    dictUT.nome = dadosMregiao[x]['regiao']
+    dictUT.data = []
 
-    dictT.label = teste[x]['regiao']
-    dictU.label = teste[x]['regiao']
+    dadosMregiao2[dadosMregiao[x]['regiao']] = []
 
-    dictxy.name = teste[x]['regiao']
-    dictxy.data = []
+    var dadosM = dadosMregiao[x]['dadosM'];
 
-    var dadosM = teste[x]['dadosM'];
+    var umidade = dadosM.map(x => ({"x": x.umidade, "y": x.dt_criacao}))
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"label": "Umidade", "data": umidade})
 
-    for(var y in dadosM){
-      dictxy.data.push({x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade']})
-    }
+
+    var temperatura = dadosM.map(x => ({"x": x.temperatura, "y": x.dt_criacao}))
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"label": "Temperatura", "data": temperatura})
+
 
     dictU.data = dadosM
     dictT.data = dadosM
@@ -124,110 +82,28 @@
       yAxisKey: 'temperatura'
     }
 
-    datasetsUmidade.push(dictxy)
+    datasetsUmidade.push(dictU)
     datasetsTemperatura.push(dictT)
-   
-    dataapex.push(dictxy)
-
-    
   }
 
   console.log(datasetsUmidade)
-  console.log(dataapex)
+  console.log(dadosMregiao2)
+
+
   const ctx = document.getElementById("myChart");
-  const ctx2 = document.getElementById("myChartT");
-
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      datasets: datasetsUmidade,
-    },
-    options: {
-      scales: {
-          x: {
-              type: 'time',
-          }
-      }
-  }
-  });
-
-  new Chart(ctx2, {
-    type: "line",
-    data: {
-      datasets: datasetsTemperatura,
-    },
-    options: {
-      scales: {
-          x: {
-              type: 'time',
-              time: {
-                  unit: 'day',
-                  displayFormats: {
-                      day: 'yy-MM-dd HH:mm:ss', // Format for date and time
-                  },
-              },
-              title: {
-                  display: true,
-                  text: 'Time'
-              }
-          }
-      }
-  }
-  });
-
-  var options = {
-    series: dataapex,
-    chart: {
-      type: 'bar',
-      height: 350
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded'
-      },
-    },
-    dataLabels: {
-      enabled: false,
-      style: {
-        colors: ['#2f27ce', '#414c4e']
-      }
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
-    },
-    xaxis: {
-      type: 'datetime',
-    },
-    yaxis: {
-      title: {
-        text: 'Umidade'
-      }
-    },
-    fill: {
-      opacity: 1,
-      colors: ['#2f27ce', '#414c4e']
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return "Precipitação: " + val + "%"
-        }
-      }
-    }
-    };
+  const ctx2 = document.getElementById("myChart2");
+  const ctx3 = document.getElementById("myChart3");
+  const ctx4 = document.getElementById("myChart4");
+  const ctx5 = document.getElementById("myChart5");
 
 
-  
-  var chart = new ApexCharts(document.querySelector("#apex"), options);
-  
-  chart.render();
+  graficoLine(ctx, datasetsUmidade, "Gráfico Umidade (2023)",20)
+  graficoLine(ctx2, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
+  graficoLine(ctx3, datasetsUmidade, "Gráfico Umidade (2023)",20)
+  graficoLine(ctx4, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
+  graficoLine(ctx5, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
 
-  console.log(dataapex)
-
-
+  criaGraficosUmTemp(dadosMregiao2)
+ 
 </script>
 {% endblock %}

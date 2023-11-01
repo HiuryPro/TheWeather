@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>{% block title %}{% endblock %}</title>
-  {% load bootstrap5 %}
-  {% bootstrap_css %}
-  {% bootstrap_javascript %}
-</head>
-<body>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %}
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+        <div class="container">
+          <a class="navbar-brand" href="/">The Weather</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/">HOME</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/members">MEMBERS</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
 
-<div class="container">
-  <ul class="nav bg-info">
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/">HOME</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link link-light" href="/members">MEMBERS</a>
-    </li>
-  </ul>
+    {% block content %} {% endblock %}
 
-  {% block content %}
-  {% endblock %}
-</div>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-{% block script %}
-{% endblock %}
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    {% block script %} {% endblock %}
+  </body>
 </html>
