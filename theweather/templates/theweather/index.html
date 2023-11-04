@@ -17,23 +17,9 @@
         <canvas id="myChart2"></canvas>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-md-6">
-      <div class="chart-container" style="aspect-ratio: 2">
-        <canvas id="myChart3"></canvas>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="chart-container" style="aspect-ratio: 2">
-        <canvas id="myChart4"></canvas>
-      </div>
-  </div>
 </section>
 
-<div class="chart-container" style="aspect-ratio: 2">
-  <canvas id="myChart5"></canvas>
-</div>
+
 
 {% endblock content %} 
 
@@ -61,12 +47,15 @@
 
     var dadosM = dadosMregiao[x]['dadosM'];
 
-    var umidade = dadosM.map(x => ({"x": x.umidade, "y": x.dt_criacao}))
-    dadosMregiao2[dadosMregiao[x]['regiao']].push({"label": "Umidade", "data": umidade})
+
+    var temperatura = dadosM.map(x => ({"y": x.temperatura, "x": x.dt_criacao}))
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "bar", "label": "Temperatura", "data": temperatura})
+
+    var umidade = dadosM.map(x => ({"y": x.umidade, "x": x.dt_criacao}))
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line", "label": "Umidade", "data": umidade})
 
 
-    var temperatura = dadosM.map(x => ({"x": x.temperatura, "y": x.dt_criacao}))
-    dadosMregiao2[dadosMregiao[x]['regiao']].push({"label": "Temperatura", "data": temperatura})
+
 
 
     dictU.data = dadosM
@@ -92,18 +81,14 @@
 
   const ctx = document.getElementById("myChart");
   const ctx2 = document.getElementById("myChart2");
-  const ctx3 = document.getElementById("myChart3");
-  const ctx4 = document.getElementById("myChart4");
-  const ctx5 = document.getElementById("myChart5");
 
 
   graficoLine(ctx, datasetsUmidade, "Gráfico Umidade (2023)",20)
   graficoLine(ctx2, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
-  graficoLine(ctx3, datasetsUmidade, "Gráfico Umidade (2023)",20)
-  graficoLine(ctx4, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
-  graficoLine(ctx5, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
 
   criaGraficosUmTemp(dadosMregiao2)
+
+  
  
 </script>
 {% endblock %}
