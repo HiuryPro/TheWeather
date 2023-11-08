@@ -49,7 +49,7 @@
 
 
     var temperatura = dadosM.map(x => ({"y": x.temperatura, "x": x.dt_criacao}))
-    dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "bar", "label": "Temperatura", "data": temperatura})
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line", "label": "Temperatura", "data": temperatura})
 
     var umidade = dadosM.map(x => ({"y": x.umidade, "x": x.dt_criacao}))
     dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line", "label": "Umidade", "data": umidade})
