@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Cadastro de Região e dados Metereologicos</title>
-</head>
-<body>
+  </head>
+  <body>
     <h2>Cadastro de Região e dados Metereologicos</h2>
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ form2.as_p }}
-        <button type="submit">Cadastrar</button>
+      {% csrf_token %} {{ form.as_p }} {{ form2.as_p }}
+      <button type="submit">Cadastrar</button>
     </form>
-</body>
+  </body>
 </html>
