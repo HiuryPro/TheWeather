@@ -19,7 +19,6 @@ db = client.WheatherDB
 regiao = db.regiao
 dados_metereologicos = db.dados_metereologicos
 
-
 def IndexView(request):
     template_name = "theweather/index.html"
     context_object_name = "latest_regiao_list"

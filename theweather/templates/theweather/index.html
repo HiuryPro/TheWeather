@@ -2,103 +2,104 @@
 {% block title %} The wheather {% endblock %} 
 {% block content %}
 
-  <div class="container">
-    <div id="apex"></div>
-  </div>
-  <div style="width: 80%">
-    <canvas id="mixedChart"></canvas>
-  </div>
+<div class="container">
+  <div id="apex"></div>
+</div>
+<div style="width: 80%">
+  <canvas id="mixedChart"></canvas>
+</div>
 
 {% endblock %} 
 
 {% block script %}
 
-  <script>
-    var teste = {{ latest_regiao_list|safe }} //ignorar erro
-    var datasetsUmidade = []
-    var datasetsTemperatura = []
-    var dataApex = []
-    var chartLineBar = []
+<script>
+  var teste = {{ latest_regiao_list|safe }} //ignorar erro
+  var datasetsUmidade = []
+  var datasetsTemperatura = []
+  var dataApex = []
+  var chartLineBar = []
 
-    for (var x in teste) {
-      var dictU = {}
-      var dictT = {}
-      var dictxy = {}
-      var dictBar = {
-        label: 'Umidade',
-        type: 'bar',
-        //backgroundColor: '#2f27ce',
-        borderColor: '#2f27ce',
-        borderWidth: 5
-      }
-      var dictLine = {
-        label: 'Temperatura',
-        type: 'scatter',
-        fill: false,
-        backgroundColor: '#cf4307',
-        borderColor: '#cf4307',
-        borderWidth: 5
-      }
-
-      dictT.label = teste[x]['regiao']
-      dictU.label = teste[x]['regiao']
-      dictxy.name = teste[x]['regiao']
-      dictxy.data = []
-      dictBar.data = []
-      dictLine.data = []
-
-      var dadosM = teste[x]['dadosM'];
-      var dadosTeste = []
-
-      for (var y in dadosM) {
-        dictxy.data.push({ x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade'] })
-
-        dadosTeste.push(dadosM[y]['umidade'])
-
-        dictBar.data.push(dadosM[y]['umidade'])
-
-        dictLine.data.push(dadosM[y]['temperatura'])
-      }
-
-      dictU.data = dadosM
-      dictT.data = dadosM
-
-      dictU.parsing = {
-        xAxisKey: 'dt_criacao',
-        yAxisKey: 'umidade'
-      }
-
-      dictT.parsing = {
-        xAxisKey: 'dt_criacao',
-        yAxisKey: 'temperatura'
-      }
-
-      datasetsUmidade.push(dictU)
-      datasetsTemperatura.push(dictT)
-      dataApex.push(dictxy)
-      chartLineBar.push(dictBar)
-      chartLineBar.push(dictLine)
+  for (var x in teste) {
+    var dictU = {}
+    var dictT = {}
+    var dictxy = {}
+    var dictBar = {
+      label: 'Umidade',
+      type: 'bar',
+      backgroundColor: '#2f27ce',
+      borderWidth: 5,
+      order: 1
     }
-    var ctx = document.getElementById("mixedChart").getContext("2d");
+    var dictLine = {
+      label: 'Temperatura',
+      type: 'scatter',
+      fill: false,
+      backgroundColor: '#cf4307',
+      borderColor: '#cf4307',
+      borderWidth: 5,
+      order: 0
+    }
 
-    var data = {
-      labels: ["Unipam", "Caiçaras"], 
-      datasets: chartLineBar
-    };
+    dictT.label = teste[x]['regiao']
+    dictU.label = teste[x]['regiao']
+    dictxy.name = teste[x]['regiao']
+    dictxy.data = []
+    dictBar.data = []
+    dictLine.data = []
 
-    var options = {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
+    var dadosM = teste[x]['dadosM'];
+    var dadosTeste = []
+
+    for (var y in dadosM) {
+      dictxy.data.push({ x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade'] })
+
+      dadosTeste.push(dadosM[y]['umidade'])
+
+      dictBar.data.push(dadosM[y]['umidade'])
+
+      dictLine.data.push(dadosM[y]['temperatura'])
+    }
+
+    dictU.data = dadosM
+    dictT.data = dadosM
+
+    dictU.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'umidade'
+    }
+
+    dictT.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'temperatura'
+    }
+
+    datasetsUmidade.push(dictU)
+    datasetsTemperatura.push(dictT)
+    dataApex.push(dictxy)
+    chartLineBar.push(dictBar)
+    chartLineBar.push(dictLine)
+  }
+  var ctx = document.getElementById("mixedChart").getContext("2d");
+
+  var data = {
+    labels: ["Unipam", "Caiçaras"], 
+    datasets: chartLineBar
+  };
+
+  var options = {
+    scales: {
+      y: {
+        beginAtZero: true,
       },
-    };
+    },
+  };
 
-    var mixedChart = new Chart(ctx, {
-      type: "bar",
-      data: data,
-      options: options,
-    });
-  </script>
+  var mixedChart = new Chart(ctx, {
+    type: "bar",
+    data: data,
+    options: options,
+  });
+</script>
 
 {% endblock %}
