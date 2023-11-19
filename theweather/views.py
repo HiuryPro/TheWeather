@@ -1,13 +1,15 @@
 import os
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from .forms import DadosMetereologicosForm, RegiaoForm
 from pymongo import MongoClient
 from bson import Decimal128
+from django.urls import reverse
 import datetime
 import decimal
 from bson.objectid import ObjectId
 from dotenv import load_dotenv
+from django.contrib import messages
 
 # Create your views here.
 
@@ -64,26 +66,13 @@ def IndexView(request):
 
 
 def cadastrar_regiao(request):
-    form_Regiao = RegiaoForm(request.POST)
-    form_Metereologia = DadosMetereologicosForm(request.POST)
-
     if request.method == 'POST':
+        form_Regiao = RegiaoForm(request.POST)
+        form_Metereologia = DadosMetereologicosForm(request.POST)
         if all([form_Regiao.is_valid(), form_Metereologia.is_valid()]):
-            _id = ObjectId()
-            input_Regiao = form_Regiao.cleaned_data
-            input_Metereologico = form_Metereologia.cleaned_data
-
-            input_Metereologico = {k: (Decimal128(str(v)) if type(
-                v) == decimal.Decimal else v) for k, v in input_Metereologico.items()}
-
-            regiao.insert_one({"_id": _id, **input_Regiao})
-            dados_metereologicos.insert_one(
-                {"id_regiao": _id, **input_Metereologico, "dt_criacao": datetime.datetime.now()})
-
-            # q = Regiao(**teste2,
-            #            dados_metereologicos=[DadosMetereologicos(**teste1)])
-            # # q.save()
-
+            print('Teste')
+            messages.success(request, message='Teste')
+            return redirect(reverse('theweather:index'))
     else:
         form_Regiao = RegiaoForm()
         form_Metereologia = DadosMetereologicosForm()

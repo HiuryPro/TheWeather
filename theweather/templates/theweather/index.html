@@ -5,7 +5,11 @@
 
 {%block content %}
 
-<section id="section" class="container">
+
+<section id="home">
+</section>
+
+<section id="graficos" class="container"> 
   <div class="row">
     <div class="col-md-6">
       <div class="chart-container" style="aspect-ratio: 2">
@@ -20,8 +24,14 @@
 </section>
 
 
+{% endblock content %}
 
-{% endblock content %} 
+
+{% block footer %}
+
+<p> Teste </p>
+
+{% endblock footer %}
 
 {% block script %}
 <script src="{% static 'script.js' %}"></script>

@@ -43,7 +43,7 @@ function criaGraficosUmTemp(dict){
   const rowNumbers = (regioes.length / 2) + (regioes.length % 2)
   var count = 1
 
-  const section = document.getElementById("section")
+  const section = document.getElementById("graficos")
 
   for(var i = 0; i < rowNumbers; i++){
     const row = document.createElement("div");
