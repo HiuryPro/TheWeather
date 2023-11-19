@@ -1,4 +1,5 @@
 {% extends "./base.html" %} 
+{% load static %} 
 {% block title %} The wheather {% endblock %} 
 {% block content %}
 
@@ -10,13 +11,12 @@
   </div>
 
 {% endblock %} 
-
 {% block script %}
 
   <script>
     const pointImage = new Image(70, 70);
-    pointImage.src = "../static/img/IconWeather10.png";
-    
+    pointImage.src = "{% static '/img/IconWeather10.png' %}";
+
     var teste = {{ latest_regiao_list|safe }}
     var datasetsUmidade = []
     var datasetsTemperatura = []
