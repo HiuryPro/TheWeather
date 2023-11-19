@@ -55,10 +55,14 @@ def IndexView(request):
     for dados in results:
         for maps in dados['dadosM']:
             for key, value in maps.items():
+                print(type(value))
                 if (type(value) == Decimal128):
                     maps[key] = float(str(maps[key]))
                 elif (type(value) == datetime.datetime):
-                    maps[key] = maps[key].strftime('%Y-%d-%m %H:%M:%S')
+                    print('Teste')
+                    print(maps[key].strftime('%Y-%m-%dT%H:%M:%S'))
+                    print(str(maps[key]))
+                    maps[key] = maps[key].strftime('%Y-%m-%dT%H:%M:%S')
         resultsFilter.append(dados)
 
     """Return the last five published questions."""

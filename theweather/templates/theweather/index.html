@@ -58,10 +58,10 @@
     var dadosM = dadosMregiao[x]['dadosM'];
 
 
-    var temperatura = dadosM.map(x => ({"y": x.temperatura, "x": x.dt_criacao}))
+    var temperatura = dadosM.map(x => ({"y": x.temperaturaBanco, "x": x.dt_criacao}))
     dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line", "label": "Temperatura", "data": temperatura})
 
-    var umidade = dadosM.map(x => ({"y": x.umidade, "x": x.dt_criacao}))
+    var umidade = dadosM.map(x => ({"y": x.umidadeBanco, "x": x.dt_criacao}))
     dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line", "label": "Umidade", "data": umidade})
 
 
@@ -73,12 +73,12 @@
 
     dictU.parsing = {
       xAxisKey: 'dt_criacao',
-      yAxisKey: 'umidade'
+      yAxisKey: 'umidadeBanco'
     }
 
     dictT.parsing = {
       xAxisKey: 'dt_criacao',
-      yAxisKey: 'temperatura'
+      yAxisKey: 'temperaturaBanco'
     }
 
     datasetsUmidade.push(dictU)

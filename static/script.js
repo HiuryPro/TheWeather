@@ -14,16 +14,9 @@ function graficoLine(ctx, dataset, title, font){
             }
           }
       },
-        scales: {
-          
+        scales: { 
             x: {
                 type: 'time',
-                time: {
-                    unit: 'day',
-                    displayFormats: {
-                        day: 'dd/MM', // Format for date and time
-                    },
-                }
             }
            
         }
