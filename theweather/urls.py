@@ -1,7 +1,5 @@
 from django.urls import path
-
 from . import views
-
 
 app_name = "theweather"
 urlpatterns = [
@@ -11,4 +9,5 @@ urlpatterns = [
     path('cadastrar/', views.IndexViewCadastrarLogin,
          name='IndexViewCadastrarLogin'),
     path('login/', views.IndexViewLogin, name='IndexViewLogin'),
+
 ]

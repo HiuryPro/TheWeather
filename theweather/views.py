@@ -15,12 +15,14 @@ import email.message
 
 # Create your views here.
 
-MONGODB_URI = os.environ['MONGODB_URI']
-OPTIONS = os.environ['OPTIONS']
+MONGODB_URI = os.environ["MONGODB_URI"]
+OPTIONS = os.environ["OPTIONS"]
+
 
 print(MONGODB_URI+OPTIONS)
 client = MongoClient(
     MONGODB_URI+OPTIONS)
+
 db = client.WheatherDB
 regiao = db.regiao
 dados_metereologicos = db.dados_metereologicos
@@ -30,6 +32,7 @@ usuario = db.usuario
 def IndexView(request):
     template_name = "theweather/index.html"
     context_object_name = "latest_regiao_list"
+
 
     lookup = {"$lookup": {"from": "dados_metereologicos",
                           "localField": "_id",
@@ -64,6 +67,7 @@ def cadastrar_regiao(request):
     if request.method == 'POST':
         form_Regiao = RegiaoForm(request.POST)
         form_Metereologia = DadosMetereologicosForm(request.POST)
+
         if all([form_Regiao.is_valid(), form_Metereologia.is_valid()]):
             print('Teste')
             messages.success(request, message='Teste')
