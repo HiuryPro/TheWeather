@@ -17,6 +17,13 @@ function graficoLine(ctx, dataset, title, font){
         scales: { 
             x: {
                 type: 'time',
+                time: {
+                  unit: 'minute', // Use 'minute' for minute granularity
+                  displayFormats: {
+                    minute: 'dd/MM HH:mm' // Format for displaying minutes
+                  },
+                  tooltipFormat: 'dd/MM HH:mm'
+                }
             }
            
         }
