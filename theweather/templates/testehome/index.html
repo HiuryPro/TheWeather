@@ -1,0 +1,289 @@
+{% extends "../theweather/base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+  <div id="banner" class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="jumbotron">
+          <h1 class="small">Bem-vindo ao <span class="bold">The Weather </span></h1>
+          <p class="big">MONITORANDO AS TEMPERATURAS LOCAIS</p>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <div class="cta-1">
+    <div class="container">
+      <div class="row text-center white">
+        <h1 class="cta-title">The Weather</h1>
+        <p class="cta-sub-title">Site de Monitoramento Climático Utilizando IoT</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="service" class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="page-title text-center">
+          <h1>Temperatura Atual</h1>
+          <p>Medição atual da cidade Patos de Minas<br>Região: Unipam</p>
+          <hr class="pg-titl-bdr-btm"></hr>
+        </div>
+        <div class="col-md-6">
+          <div id="chart1">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div id="chart2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="about" class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="page-title text-center">
+          <h1>Conheça nossa equipe</h1>
+          <p>Bravos Guerreiros<br>Se junte a nós nesse projeto.</p>
+          <hr class="pg-titl-bdr-btm"></hr>
+        </div>
+        <div class="autoplay">
+          <div class="col-md-6">
+            <div class="team-info">
+              <div class="img-sec">
+                <img src="{% static 'img/agent1.jpg' %}" class="img-responsive">
+    
+              </div>
+              <div class="fig-caption">
+                <h3>João Augusto</h3>
+                <p class="marb-20">Trabalhador de sinaleiro</p>
+                <p>Follow me:</p>
+                <ul class="team-social">
+                  <li class="bgblue-dark"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                  <li class="bgred"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                  <li class="bgblue-light"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                  <li class="bgblue-dark"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="team-info">
+              <div class="img-sec">
+                <img src="{% static 'img/agent2.jpg' %}" class="img-responsive">
+              </div>
+              <div class="fig-caption">
+                <h3>Hyure</h3>
+                <p class="marb-20">DBA</p>
+                <p>Follow me:</p>
+                <ul class="team-social">
+                  <li class="blue-dark"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                  <li class="red"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                  <li class="blue-light"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                  <li class="blue-dark"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="team-info">
+              <div class="img-sec">
+                <img src="{% static 'img/agent3.jpg' %}" class="img-responsive">
+              </div>
+              <div class="fig-caption">
+                <h3>Ricardo Balbino</h3>
+                <p class="marb-20">Front-End</p>
+                <p>Follow me:</p>
+                <ul class="team-social">
+                  <li class="blue-dark"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                  <li class="red"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                  <li class="blue-light"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                  <li class="blue-dark"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="team-info">
+              <div class="img-sec">
+                <img src="{% static 'img/agent4.jpg' %}" class="img-responsive">
+              </div>
+              <div class="fig-caption">
+                <h3>Eduardo Cipriano</h3>
+                <p class="marb-20">Front-End</p>
+                <p>Follow me:</p>
+                <ul class="team-social">
+                  <li class="blue-dark"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                  <li class="red"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                  <li class="blue-light"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                  <li class="blue-dark"><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div id="contact" class="section-padding">
+    <div class="container">
+      <div class="row">
+        <div class="page-title text-center">
+          <h1>Envie sua Dúvida</h1>
+          <p>Nosso suporte pode responder as suas dúvidas ou sugestões da melhor maneira<br>Venha nós ajudar </p>
+          <hr class="pg-titl-bdr-btm"></hr>
+        </div>
+        <div id="sendmessage">Enviado !!!</div>
+        <div id="errormessage"></div>
+
+        <div class="form-sec">
+          <form action="" method="post" role="form" class="contactForm">
+            {% csrf_token %}
+            <div class="col-md-4 form-group">
+              <input type="text" name="nome" class="form-control text-field-box" id="name" placeholder="Seu Nome" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+              <div class="validation"></div>
+            </div>
+            <div class="col-md-4 form-group">
+              <input type="email" class="form-control text-field-box" name="email" id="email" placeholder="Seu Email" data-rule="email" data-msg="Please enter a valid email" />
+              <div class="validation"></div>
+            </div>
+            <div class="col-md-4 form-group">
+              <input type="text" class="form-control text-field-box" name="assunto" id="subject" placeholder="Sugestão" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+              <div class="validation"></div>
+            </div>
+            <div class="col-md-12 form-group">
+              <textarea class="form-control text-field-box" name="messagem" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Descreva sua sugestão"></textarea>
+              <div class="validation"></div>
+
+              <button class="button-medium" id="contact-submit" type="submit" name="contact">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <footer class="footer section-padding">
+    <div class="container">
+      <div class="row">
+        <div style="visibility: visible; animation-name: zoomIn;" class="col-sm-12 text-center wow zoomIn">
+          <h3>Follow us on</h3>
+          <div class="footer_social">
+            <ul>
+              <li><a class="f_facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+              <li><a class="f_twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+              <li><a class="f_google" href="#"><i class="fa fa-google-plus"></i></a></li>
+              <li><a class="f_linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+            </ul>
+          </div>
+        </div>
+        <!--- END COL -->
+      </div>
+      <!--- END ROW -->
+    </div>
+    <!--- END CONTAINER -->
+  </footer>
+  <!--FOOTER END-->
+
+  <div class="footer-bottom">
+    <div class="container">
+      <div style="visibility: visible; animation-name: zoomIn;" class="col-md-12 text-center wow zoomIn">
+        <div class="footer_copyright">
+          <p> © Copyright, All Rights Reserved.</p>
+          <div class="credits">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+
+<script>
+  var dadosMregiao = {{latest_regiao_list|safe}}
+  console.log(dadosMregiao)
+  
+
+  count = 1
+  for(var i in dadosMregiao){
+    console.log(dadosMregiao[i])
+    var dadosM = dadosMregiao[i]['dadosM']
+    console.log(dadosM)
+    var options = {
+      chart: {
+          height: 350,
+          type: 'radialBar',
+      },
+        plotOptions: {
+        radialBar: {
+          dataLabels: {
+            value: {
+              show: true,
+              fontSize: '14px',
+              formatter: function (val) {
+                return val
+              }
+            }
+          }
+        }
+      },
+      series: [dadosM[0]['temperaturaBanco']],
+      labels: ['Temeperatura'],
+    }
+
+
+    var options2 = {
+      chart: {
+          height: 350,
+          type: 'radialBar',
+      },
+        plotOptions: {
+        radialBar: {
+          dataLabels: {
+            value: {
+              show: true,
+              fontSize: '14px',
+              formatter: function (val) {
+                return val + '%'
+              }
+            }
+          }
+        }
+      },
+      series: [dadosM[0]['umidadeBanco']],
+      labels: ['Umidade'],
+    }
+    
+    console.log(`#chart${count}`)
+    var chart = new ApexCharts(document.querySelector(`#chart${count}`), options);
+    count++
+    var chart2 = new ApexCharts(document.querySelector(`#chart${count}`), options2);
+    
+    chart.render();
+    chart2.render();
+  }
+  
+</script>
+{% endblock %}
+
+
+

@@ -1,25 +1,50 @@
+{% load static %}
+
+
 <!DOCTYPE html>
-<html>
+<html lang="pt-br" class=" js no-touch">
   <head>
     <title>{% block title %}{% endblock %}</title>
-    {% load bootstrap5 %} {% bootstrap_css %} {% bootstrap_javascript %} <!-- {% load static %} -->
-    <!-- <link rel="stylesheet" href="{% static '../static/img/' %}"/> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static '/img/IconsWeatherIcone.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,600|Raleway:600,300|Josefin+Slab:400,700,600italic,600,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/slick-team-slider.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
   </head>
   <body>
-    <div class="container">
-      <ul class="nav bg-info">
-        <li class="nav-item">
-          <a class="nav-link link-light" href="/">HOME</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link link-light" href="/members">MEMBERS</a>
-        </li>
-      </ul>
+    <header>
+      <div class="main-navigation navbar-fixed-top">
+        <nav class="navbar navbar-default">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+              <a class="navbar-brand" href="{% url 'theweather:home' %}">The Weather</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+              <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a href="{% url 'theweather:home' %}">Inicio</a></li>
+                <li><a href="{% url 'theweather:graficos' %}">Gráficos</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
 
-      {% block content %} {% endblock %}
-    </div>
+    {% block content %} {% endblock %}
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     {% block script %} {% endblock %}
   </body>
 </html>

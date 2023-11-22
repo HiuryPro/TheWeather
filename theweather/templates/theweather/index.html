@@ -1,115 +1,193 @@
-{% extends "./base.html" %} 
-{% load static %} 
+{% extends "./base.html" %}
+{% load static %}
+
 {% block title %} The wheather {% endblock %} 
-{% block content %}
 
-  <div class="container">
-    <div id="apex"></div>
-  </div>
-  <div style="width: 80%">
-    <canvas id="mixedChart"></canvas>
+{%block content %}
+
+
+<section id="home">
+</section>
+
+<section id="graficos" class="container-fluid"> 
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart2"></canvas>
+      </div>
+    </div>
   </div>
 
-{% endblock %} 
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="myChart3"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="chart-container" style="aspect-ratio: 2">
+        <canvas id="mixedChart"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+</br>
+</br>
+</br>
+<div class="container-fluid mt-4">
+  <iframe class="mt-6" src="http://3.92.144.248:1880/ui/#!/0?socketid=6LXaFCqK3T9SFzFSAAFo" title="description" width="100%" height="800"></iframe>
+</div>
+
+
+
+
+
+{% endblock content %}
+
+
 {% block script %}
+<script src="{% static 'script.js' %}"></script>
+<script>
+  const pointImage = new Image(50,50);
+  pointImage.src = "{% static '/img/IconsWeather.png' %}";
 
-  <script>
-    const pointImage = new Image(70, 70);
-    pointImage.src = "{% static '/img/IconWeather10.png' %}";
 
-    var teste = {{ latest_regiao_list|safe }}
-    var datasetsUmidade = []
-    var datasetsTemperatura = []
-    var dataApex = []
-    var chartLineBar = []
+  var dadosMregiao = {{latest_regiao_list|safe}}
+  var datasetsUmidade = []
+  var datasetsTemperatura = []
+  var temperaturaUmidae = []
+  var chartLineBar = []
 
-    for (var x in teste) {
-      var dictU = {}
-      var dictT = {}
-      var dictxy = {}
-      // options do gráfico de barra
-      var dictBar = {
-        label: 'Umidade',
-        type: 'bar',
-        backgroundColor: '#2f27ce',
-        borderWidth: 5,
-        order: 1
-      }
-      // options do gráfico de linha
-      var dictLine = {
-        elements:{
-          point:{
-            pointStyle: [pointImage]
-          }
-        },
-        label: 'Temperatura',
-        type: 'scatter',
-        fill: false,
-        backgroundColor: '#cf4307',
-        borderColor: '#cf4307',
-        borderWidth: 5,
-        order: 0
-      }
+  var dadosMregiao2 = {}
 
-      dictT.label = teste[x]['regiao']
-      dictU.label = teste[x]['regiao']
-      dictxy.name = teste[x]['regiao']
-      dictxy.data = []
-      dictBar.data = []
-      dictLine.data = []
+  for(var x in dadosMregiao){
+    var dictU = {"borderWidth" : 5}
+    var dictT = {"borderWidth" : 5}
+    var dictUT = {}
 
-      var dadosM = teste[x]['dadosM'];
-      var dadosTeste = []
 
-      for (var y in dadosM) {
-        dictxy.data.push({ x: dadosM[y]['dt_criacao'], y: dadosM[y]['umidade'] })
-
-        dadosTeste.push(dadosM[y]['umidade'])
-
-        dictBar.data.push(dadosM[y]['umidade'])
-
-        dictLine.data.push(dadosM[y]['temperatura'])
-      }
-
-      dictU.data = dadosM
-      dictT.data = dadosM
-
-      dictU.parsing = {
-        xAxisKey: 'dt_criacao',
-        yAxisKey: 'umidade'
-      }
-
-      dictT.parsing = {
-        xAxisKey: 'dt_criacao',
-        yAxisKey: 'temperatura'
-      }
-
-      datasetsUmidade.push(dictU)
-      datasetsTemperatura.push(dictT)
-      dataApex.push(dictxy)
-      chartLineBar.push(dictBar)
-      chartLineBar.push(dictLine)
+    var dictBar = {
+      label: 'Temperatura',
+      type: 'bar',
+      backgroundColor: '#2f27ce',
+      borderColor: '#2f27ce',
+      borderWidth: 5,
+      order: 1
     }
-    var ctx = document.getElementById("mixedChart").getContext("2d");
 
-    var data = {
-      labels: ["Unipam", "Caiçaras"],
-      datasets: chartLineBar
-    };
-
-    var options = {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
+    var dictLine = {
+      elements:{
+        point:{
+          pointStyle: [pointImage],
+          hitRadius: 20,
+          hoverRadius: 20
+        }
       },
-    };
+      pointRadius: 10,
+      label: 'Umidade',
+      type: 'line',
+      fill: false,
+      borderColor: '#2f27ce',
+      borderWidth: 5,
+      order: 0
+    }
 
-    var mixedChart = new Chart(ctx, {
-      type: "bar",
-      data: data,
-      options: options,
-    });
-  </script>
+
+    dictBar.data = []
+    dictLine.data = []
+
+    dictT.label = dadosMregiao[x]['regiao']
+    dictU.label = dadosMregiao[x]['regiao']
+    dictUT.nome = dadosMregiao[x]['regiao']
+    dictUT.data = []
+
+    dadosMregiao2[dadosMregiao[x]['regiao']] = []
+
+    var dadosM = dadosMregiao[x]['dadosM'];
+
+
+    var temperatura = dadosM.map(x => ({"y": x.temperaturaBanco, "x": x.dt_criacao}))
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line","borderWidth" : 5,"label": "Temperatura", "data": temperatura})
+
+    var umidade = dadosM.map(x => ({"y": x.umidadeBanco, "x": x.dt_criacao}))
+    dadosMregiao2[dadosMregiao[x]['regiao']].push({"type": "line","borderWidth" : 5, "label": "Umidade", "data": umidade})
+
+    dictBar.data = temperatura
+
+    dictLine.data = umidade
+
+    dictU.data = dadosM
+    dictT.data = dadosM
+
+    dictU.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'umidadeBanco'
+    }
+
+    dictT.parsing = {
+      xAxisKey: 'dt_criacao',
+      yAxisKey: 'temperaturaBanco'
+    }
+
+    datasetsUmidade.push(dictU)
+    datasetsTemperatura.push(dictT)
+    chartLineBar.push(dictLine)
+    chartLineBar.push(dictBar)
+
+  }
+
+  console.log(datasetsUmidade)
+  console.log(dadosMregiao2)
+
+
+  const ctx = document.getElementById("myChart");
+  const ctx2 = document.getElementById("myChart2");
+  var ctx3 = document.getElementById("mixedChart").getContext("2d");
+  const ctx4 = document.getElementById("myChart3");
+
+  graficoLine(ctx, datasetsUmidade, "Gráfico Umidade (2023)",20)
+  graficoLine(ctx2, datasetsTemperatura,"Gráfico Temperatura (2023)",20)
+
+  //criaGraficosUmTemp(dadosMregiao2)
+  graficoLine(ctx4, dadosMregiao2['Unipam'],`Gráfico Temperatura/Umidade Unipam (2023)`,20)
+
+
+
+  var data = {
+    datasets: chartLineBar
+  };
+
+  var options = {
+    responsive: true,
+    scales: { 
+      x: {
+          type: 'time',
+          time: {
+            unit: 'minute', // Use 'minute' for minute granularity
+            displayFormats: {
+              minute: 'dd/MM HH:mm' // Format for displaying minutes
+            },
+            tooltipFormat: 'dd/MM HH:mm'
+          }
+      },
+      y: {
+        beginAtZero: true,
+      },
+  }
+  };
+
+  var mixedChart = new Chart(ctx3, {
+    type: "bar",
+    data: data,
+    options: options,
+  });
+
+ 
+</script>
 
 {% endblock %}

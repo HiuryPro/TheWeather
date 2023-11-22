@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static '/img/IconsWeatherIcone.ico' %}">
+  </head>
+  <body>
+    <div class="main-login">
+      <div class="left-login">
+        <h1>
+          Faça Login <br />
+          E administre seu painel
+        </h1>
+        <img
+          src="{% static 'IMG/Weather.svg' %}"
+          class="left-login-img"
+          alt="Weather Animação"
+        />
+      </div>
+      <form method="post" class="right-login">
+        {% csrf_token %}
+        <div class="card-login">
+          <h1>LOGIN</h1>
+          {% for fm in form %}
+          <div class="textfield">
+            <label>{{ fm.label }}</label>
+            {{ fm }}
+          </div>
+          {% endfor %}
+
+          <button
+            class="btn-login"
+            onclick="window.location='/theweather/cadastrarLogin/'"
+          >
+            LOGIN
+          </button>
+          <button
+            class="btn-login"
+            onclick="window.location='/theweather/cadastrarLogin/'"
+          >
+            CADASTRO
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
