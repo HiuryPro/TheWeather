@@ -1,4 +1,4 @@
-{% extends "../theweather/base.html" %}
+{% extends "./base.html" %}
 {% load static %}
 
 
@@ -28,9 +28,10 @@
     <div class="container">
       <div class="row">
         <div class="page-title text-center">
-          <h1>Temperatura Atual</h1>
+          <h1>Temperatura e Umidade Atual</h1>
           <p>Medição atual da cidade Patos de Minas<br>Região: Unipam</p>
           <hr class="pg-titl-bdr-btm"></hr>
+          <button class="button-medium" onClick="location.reload();">Atualizar</button>
         </div>
         <div class="col-md-6">
           <div id="chart1">
@@ -79,7 +80,7 @@
                 <img src="{% static 'img/agent2.jpg' %}" class="img-responsive">
               </div>
               <div class="fig-caption">
-                <h3>Hyure</h3>
+                <h3>Hiury</h3>
                 <p class="marb-20">DBA</p>
                 <p>Follow me:</p>
                 <ul class="team-social">
@@ -217,6 +218,9 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
+
+
+
 
 <script>
   var dadosMregiao = {{latest_regiao_list|safe}}

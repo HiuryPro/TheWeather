@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/style2.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static '/img/IconsWeatherIcone.ico' %}">
+  </head>
+  <body>
+    <div class="main-login">
+      <div class="left-login">
+        <h1>
+          The Weather <br />
+          Medições Meteorológicas
+        </h1>
+        <img
+          src="{% static 'IMG/Weather.svg' %}"
+          class="left-login-img"
+          alt="Weather Animação"
+        />
+      </div>
+
+      <div class="right-login">
+        <div class="card-login">
+          <form method="post" class="right-login">
+            <div class="card-form">
+            {% csrf_token %}
+            <h1 style="color: #ffff;">LOGIN</h1>
+            {% for fm in form %}
+              <div class="textfield">
+                <label>{{ fm.label }}</label>
+                {{ fm }}
+              </div>
+            {% endfor %}
+  
+            <button class="btn-login" type="submit">
+              LOGIN
+            </button>
+          </div>
+          </form>
+
+          <button class="btn-login" onClick="window.location='{% url 'theweather:IndexViewCadastrarLogin' %}'">
+            CADASTRO
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  {% if messages %}
+{% for message in messages %}
+ {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+
+{% endfor %}
+
+{% endif %}
+</html>

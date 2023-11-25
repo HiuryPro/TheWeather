@@ -60,21 +60,6 @@ def IndexView(request):
     return render(request, template_name, {context_object_name: resultsFilter})
 
 
-def cadastrar_regiao(request):
-    if request.method == 'POST':
-        form_Regiao = RegiaoForm(request.POST)
-        form_Metereologia = DadosMetereologicosForm(request.POST)
-        if all([form_Regiao.is_valid(), form_Metereologia.is_valid()]):
-            print('Teste')
-            messages.success(request, message='Teste')
-            return redirect(reverse('theweather:index'))
-    else:
-        form_Regiao = RegiaoForm()
-        form_Metereologia = DadosMetereologicosForm()
-
-    return render(request, 'theweather/cadastro.html', {'form': form_Regiao, "form2": form_Metereologia})
-
-
 def enviar_email(emailname, nome, assunto, corpo):
     corpo_email = f"""
         {nome}
@@ -98,7 +83,7 @@ def enviar_email(emailname, nome, assunto, corpo):
 
 
 def testeIndexView(request):
-    template_name = "testehome/index.html"
+    template_name = "theweather/home.html"
     context_object_name = "latest_regiao_list"
 
     lookup = {"$lookup": {"from": "dados_metereologicos",
@@ -136,7 +121,7 @@ def testeIndexView(request):
 
 def IndexViewCadastrarLogin(request):
     form_Cadastro = CadastoForm()
-    template_name = "login/cadastro.html"
+    template_name = "theweather/cadastro.html"
     print("Cadastrado com Sucesso !")
 
     if request.method == 'POST':
@@ -145,6 +130,8 @@ def IndexViewCadastrarLogin(request):
             input_Cadastro = form_Cadastro.cleaned_data
             usuario.insert_one(input_Cadastro)
             print(input_Cadastro)
+            messages.success(request, message='Cadastro feito com sucesso!!')
+            return redirect(reverse('theweather:IndexViewLogin'))
     else:
         form_Cadastro = CadastoForm()
 
@@ -153,7 +140,7 @@ def IndexViewCadastrarLogin(request):
 
 
 def IndexViewLogin(request):
-    template_name = "login/index.html"
+    template_name = "theweather/login.html"
     print("teste")
 
     if request.method == 'POST':
@@ -167,6 +154,7 @@ def IndexViewLogin(request):
                 return redirect(reverse('theweather:home'))
             else:
                 print("Email ou senha errado!")
+                form_Login = ValidaLoginForm()
                 messages.success(request, message='Email ou senha errado!')
 
             print(input_Login)

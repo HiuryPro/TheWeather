@@ -26,11 +26,11 @@ class CadastoForm(forms.Form):
     email = forms.CharField(max_length=100, label="Email",
                             widget=forms.TextInput(attrs={"placeholder": "Email"}))
     senha = forms.CharField(max_length=100, label="Senha",
-                            widget=forms.TextInput(attrs={"placeholder": "Senha"}))
+                            widget=forms.TextInput(attrs={"placeholder": "Senha", "type": "password", "minlength": "8"}))
 
 
 class ValidaLoginForm(forms.Form):
     email = forms.CharField(max_length=100, label="Email",
                             widget=forms.TextInput(attrs={"placeholder": "Email"}))
     senha = forms.CharField(max_length=100, label="Senha",
-                            widget=forms.TextInput(attrs={"placeholder": "Senha"}))
+                            widget=forms.TextInput(attrs={"placeholder": "Senha", "type": "password", "minlength": "8"}))

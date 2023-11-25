@@ -1,23 +1,52 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Cadastro de Região e dados Metereologicos</title>
-</head>
-<body>
-    <h2>Cadastro de Região e dados Metereologicos</h2>
-    <form method="post">
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="{% static 'css/style3.css' %}" />
+    <link rel="icon" type="image/x-icon" href="{% static '/img/IconsWeatherIcone.ico' %}">
+  </head>
+
+  <body>
+    <div class="main-login">
+      <div class="left-login">
+        <h1>THE WEATHER</h1>
+        <img
+          src="{% static 'IMG/server-animate.svg' %}"
+          class="left-login-img"
+          alt="Weather Animação"
+        />
+      </div>
+      <form method="post" class="right-login">
         {% csrf_token %}
-        {{ form.as_p }}
-        {{ form2.as_p }}
-        <button type="submit">Cadastrar</button>
-    </form>
-</body>
+        <div class="card-login">
+          <h1>CADASTRO</h1>
+          {% for fm in form %}
+          <div class="textfield">
+            <label>{{fm.label}}</label>
+            {{fm}}
+          </div>
+          {% endfor %}
+          <button class="btn-login" type="submit">Cadastrar</button>
+          <button
+            class="btn-login"
+            onclick="window.location='{% url 'theweather:IndexViewLogin' %}'"
+          >
+            VOLTAR
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
 
-{% if messages %}
-{% for message in messages %}
- {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
-
-{% endfor %}
-
-{% endif %}
+  {% if messages %}
+  {% for message in messages %}
+   {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+  
+  {% endfor %}
+  
+  {% endif %}
 </html>
