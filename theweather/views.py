@@ -62,14 +62,15 @@ def IndexView(request):
 
 def enviar_email(emailname, nome, assunto, corpo):
     corpo_email = f"""
-        {nome}
+        Email: {emailname} <br>
+        Nome: {nome} <br>
         {corpo}
     """
 
     msg = email.message.Message()
     msg['Subject'] = assunto
     msg['From'] = 'teagames2023@gmail.com'
-    msg['To'] = emailname
+    msg['To'] = 'teagames2023@gmail.com'
     password = 'mjiqlvpsnvbjujot'
     msg.add_header('Content-Type', 'text/html')
     msg.set_payload(corpo_email)
